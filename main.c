@@ -34,7 +34,7 @@ void exercice_A_1(void) {
     printf("%s\n", "Écrivez un programme qui lit une suite de nombres dans un fichier et les met dans un vecteur (une table). Affichez chaque nombre avec son indice dans la table. On suppose connue à l’avance la taille de la suite. Exemple : le fichier contient « 21<CR> 23<CR> 275.4<CR>... ». <CR> symbolise un retour-charriot). Le programme affiche :");
     puts("");
     int tailleSuite = 6;
-    str fichier = "fichier.txt";
+    str fichier = "A1.txt";
     lectureF(fichier, tailleSuite, "%f", "Float") ;
     lectureD(fichier, tailleSuite, "%lf", "Double") ;
     lectureI(fichier, tailleSuite, "%d", "Integer") ;
