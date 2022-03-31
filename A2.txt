@@ -1,1 +1,1 @@
-5<CR>rue<CR>Guy de la Brosse<CR><CR>Paris<CR>75005
+5 <CR> rue <CR> Guy de la Brosse <CR> Paris <CR> 75005 <CR>
