@@ -1,0 +1,6 @@
+5 <CR> rue <CR> Guy de la Brosse <CR> Paris <CR> 75005 <CR>
+15 <CR> place <CR> Vendome <CR> Paris <CR> 75001 <CR>
+10 <CR> place <CR> de la Concorde <CR> Paris <CR> 75008 <CR>
+112 <CR> rue <CR> du Faubourg Saint-Honore <CR> Paris <CR> 75008 <CR>
+19 <CR> avenue <CR> Kleber <CR> Paris <CR> 75116 <CR>
+11 <CR> bis rue <CR> Pierre Semard <CR> Paris <CR> 75009 <CR>

@@ -21,12 +21,14 @@ typedef struct {
 
 void exercice_A_1(const str, const str) ; // prototyp
 void exercice_A_2(const str, const str) ; // prototyp
+void exercice_A_3(const str, const str) ; // prototyp
 void lectureF(const str, const int, const char format[2], const str) ; // prototyp
 void lectureD(const str, const int, const char format[2], const str) ; // prototyp
 void lectureL(const str, const int, const char format[2], const str) ; // prototyp
 void lectureI(const str, const int, const char format[2], const str) ; // prototyp
 void lectureC(const str, const int, const char format[2], const str) ; // prototyp
 void lectureStructure(const str) ; // prototyp
+void lectureStructureTaille(const str, const int) ; // prototyp
 void usage(const str, const str) ; // prototyp
 
 
@@ -36,6 +38,7 @@ int main(int k, const str ldc[], const str envp[]) {
     puts("");
     exercice_A_1("A.1 Vecteurs", "A1.txt");
     exercice_A_2("A.2 Agrégats", "A2.txt");
+    exercice_A_3("A.3 Vecteurs d'agrégats", "A3.txt");
     return 0 ;
 }
 
@@ -60,6 +63,17 @@ void exercice_A_2(const str titre, const str nomFichier) {
     printf("%s\n", "Écrivez un programme qui lit une suite d’adresses dans un fichier et les met dans une structure. Affichez les parties de la structure.Exemple : le fichier contient « 5 <CR> rue <CR> Guy de la Brosse <CR> Paris <CR> 75005<CR> ... ». Le programme affiche :");
     puts("");
     lectureStructure("A2.txt");
+}
+
+void exercice_A_3(const str titre, const str nomFichier) {
+    printf("%s\n", titre);
+    puts("");
+    printf("%s\n", "Écrivez un programme qui lit une suite d’adresses dans un fichier et les met dans une table de structures. Combinez le résultat des deux programmes précédents.");
+    puts("");
+    printf("%s\n", "Testez le même fichier avec différentes sortes de formats d’entrée (float et décimal) et avec différents types de tables (tables de char, de float, d’int, de long int, etc).");
+    puts("");
+    int tailleSuite = 6;
+    lectureStructureTaille("A3.txt", tailleSuite);
 }
 
 void lectureF(const str filename, const int taille, const char format[2], const str type) {
@@ -172,26 +186,43 @@ void lectureC(const str filename, const int taille, const char format[2], const 
     fclose(R); // ferme le canal
     puts("");
 }
+
 void lectureStructure(const str filename) {
     adresse monAdresse = {1};
-    char cr[5] = { "<CR>" }, separateur[5]; // Definition du séparateur
+    char cr[5] = { "<CR>" }, separateur; // Definition du séparateur
     char lu = 0;
     FILE * R = fopen(filename, "r") ; // ouvre le canal R en mode "r" pour le fichier avec le nom filename
     if (! R) usage(filename, "Fichier non lisible") ; // si pas de fichier appel usage(const str, const str)
     for (int max = 0 ; max < 5 && EOF != lu; ++max) {
         if(max == 0) {
             lu = fscanf(R, "%d", monAdresse.numero) ;
-            * separateur = fscanf(R, "%s", cr) ;
+            separateur = fscanf(R, "%s", cr) ;
         }
         else if(max == 1) {
-            lu = fscanf(R, "%s", monAdresse.voie) ;
-            * separateur = fscanf(R, "%s", cr) ;
+            int index = 0;
+            int nb_mots = 0 ;
+            str mots[10] ;
+            char stop[32] = {1} ;
+            while(lu != EOF && strcmp(stop,cr) != 0) {
+                lu = fscanf(R, "%s", stop);
+                if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
+                if(strcmp(stop,cr) != 0) {
+                    mots[nb_mots] = strdup(stop) ;
+                    mots[++nb_mots] = " " ;
+                    nb_mots++ ;
+                }
+            }
+            for (int iMot = 0; iMot < nb_mots; iMot++) {
+                for (int iLettre = 0; iLettre < strlen(mots[iMot]); iLettre++) {
+                    monAdresse.voie[index++] = mots[iMot][iLettre];
+                }
+            }
         }
         else if(max == 2) {
             int index = 0;
             int nb_mots = 0 ;
             str mots[10] ;
-            char stop[32] ;
+            char stop[32] = {1} ;
             while(lu != EOF && strcmp(stop,cr) != 0) {
                 lu = fscanf(R, "%s", stop);
                 if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
@@ -211,7 +242,7 @@ void lectureStructure(const str filename) {
             int index = 0;
             int nb_mots = 0 ;
             str mots[10] ;
-            char stop[32] ;
+            char stop[32] = {1} ;
             while(lu != EOF && strcmp(stop,cr) != 0) {
                 lu = fscanf(R, "%s", stop);
                 if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
@@ -229,7 +260,7 @@ void lectureStructure(const str filename) {
         }
         else {
             lu = fscanf(R, "%d", monAdresse.code_postal) ;
-            * separateur = fscanf(R, "%s", cr) ;
+            separateur = fscanf(R, "%s", cr) ;
         }
         if (! lu) usage(filename, "Le format du fichier n'est pas correcte. ex : numero(3) <CR> voie(8) <CR> nom de la voie(30) <CR> ville(10) <CR> code postal(5) <CR>") ;
     }
@@ -238,6 +269,84 @@ void lectureStructure(const str filename) {
     printf( "Nom de la voie : %s\n", monAdresse.nom_de_la_voie);
     printf( "Ville : %s\n", monAdresse.ville);
     printf( "Code postal: %d\n", * monAdresse.code_postal);
+    puts("");
+}
+
+void lectureStructureTaille(const str filename, const int taille) {
+    adresse monVecteur[taille];
+    FILE * R = fopen(filename, "r") ; // ouvre le canal R en mode "r" pour le fichier avec le nom filename
+    if (! R) usage(filename, "Fichier non lisible") ; // si pas de fichier appel usage(const str, const str)
+    char cr[5] = {"<CR>"}, separateur, lu = 0;
+    for (int maxTaille = 0 ; maxTaille < taille && EOF != lu ; maxTaille++) {
+        for (int max = 0 ; max < 5 && EOF != lu; ++max) {
+            if(max == 0) {
+                lu = fscanf(R, "%d", monVecteur[maxTaille].numero) ;
+                separateur = fscanf(R, "%s", cr) ;
+            }
+            else if(max == 1) {
+                int index = 0;
+                char stop[32] = {1} ;
+                while(lu != EOF && strcmp(stop,cr) != 0) {
+                    lu = fscanf(R, "%s", stop);
+                    if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
+                    if(strcmp(stop,cr) != 0) {
+                        const str mot = strdup(stop) ;
+                        if(index>0) {monVecteur[maxTaille].voie[index] = * " ";  index++; };
+                        for (int iLettre = 0; iLettre < strlen(mot); iLettre++) {
+                            monVecteur[maxTaille].voie[index] = mot[iLettre] ;
+                            index++;
+                        }
+                    }
+                }
+            }
+            else if(max == 2) {
+                int index = 0;
+                char stop[32] = {1} ;
+                while(lu != EOF && strcmp(stop,cr) != 0) {
+                    lu = fscanf(R, "%s", stop);
+                    if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
+                    if(strcmp(stop,cr) != 0) {
+                        const str mot = strdup(stop) ;
+                        if(index>0) {monVecteur[maxTaille].nom_de_la_voie[index] = *" ";  index++; };
+                        for (int iLettre = 0; iLettre < strlen(mot); iLettre++) {
+                            monVecteur[maxTaille].nom_de_la_voie[index] = mot[iLettre] ;
+                            index++;
+                        }
+                    }
+                }
+            }
+            else if(max == 3) {
+                int index = 0;
+                char stop[32] = {1} ;
+                while(lu != EOF && strcmp(stop,cr) != 0) {
+                    lu = fscanf(R, "%s", stop);
+                    if (! lu) usage(filename, "Le fichier contier des caractères non autorisés") ;
+                    if(strcmp(stop,cr) != 0) {
+                        const str mot = strdup(stop) ;
+                        if(index>0) {monVecteur[maxTaille].ville[index] = *" ";  index++; };
+                        for (int iLettre = 0; iLettre < strlen(mot); iLettre++) {
+                            monVecteur[maxTaille].ville[index] = mot[iLettre] ;
+                            index++;
+                        }
+                    }
+                }
+                
+            }
+            else {
+                lu = fscanf(R, "%d", monVecteur[maxTaille].code_postal) ;
+                separateur = fscanf(R, "%s", cr) ;
+            }
+            if (! lu) usage(filename, "Le format du fichier n'est pas correcte. ex : numero(3) <CR> voie(8) <CR> nom de la voie(30) <CR> ville(10) <CR> code postal(5) <CR>") ;
+        }
+    }
+    for (int i = 0; i < taille; i++) {
+        printf( "Numéro : %d\n", * monVecteur[i].numero);
+        printf( "Voie : %s\n", monVecteur[i].voie);
+        printf( "Nom de la voie : %s\n", monVecteur[i].nom_de_la_voie);
+        printf( "Ville : %s\n", monVecteur[i].ville);
+        printf( "Code postal: %d\n", * monVecteur[i].code_postal);
+        puts("");
+    }
     fclose(R); // ferme le canal
     puts("");
 }
