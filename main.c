@@ -1,9 +1,14 @@
-//
-//  main.c
-//  ExoREV1Rigides
-//
-//  Created by jeremy fouquet on 30/03/2022.
-//
+/*
+   # *******************************************************
+   # Nom ......... : 3-calc.y
+   # Rôle ........ : Exercices sur les structures de données en C
+   # Auteur ...... : Jeremy Fouquet
+   # Version ..... : V1 2022
+   # Licence ..... : Réalisé dans le cadre du cours de La Licence Informatique de L IED
+   # Compilation :  gcc main.c
+   # Execution : ./a.out
+   # *******************************************************
+*/
 
 #include <stdio.h> // puts(), printf()
 #include <stdlib.h> // exit()
