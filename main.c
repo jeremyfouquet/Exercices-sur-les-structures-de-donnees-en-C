@@ -1,6 +1,6 @@
 /*
    # *******************************************************
-   # Nom ......... : 3-calc.y
+   # Nom ......... : main.c
    # Rôle ........ : Exercices sur les structures de données en C
    # Auteur ...... : Jeremy Fouquet
    # Version ..... : V1 2022
